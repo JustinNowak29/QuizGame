@@ -1,6 +1,6 @@
-import time, sqlite3, MainModules, QuizConfiguration, QuizObject
+import time, sqlite3, MainModules, QuizCreation, QuizDeletion
 
-class QuizMaker:
+class QuizMakerClass:
 
     unsuccessfulLogInAttempt = 0
 
@@ -50,20 +50,21 @@ class QuizMaker:
                 unsuccessfulLogInAttempt += 1
                 username = MainModules.enterUsername()
                 password = MainModules.enterPassword()
-                quizMaker1 = QuizMaker()
+                quizMaker1 = QuizMakerClass()
                 quizMaker1.LogIn(username, password, unsuccessfulLogInAttempt)
         
         conn.commit()
         conn.close()
     
-    def SignInAndLogInProcess():
+    def SignInAndLogInProcess(self):
+        quizMakerObject = QuizMakerClass()
         signOrLogOption = MainModules.signOrLogOptions()
 
         if signOrLogOption == 1:
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            quizMaker1 = QuizMaker()
-            quizMaker1.SignUp(username, password)
+            quizMakerObject = QuizMakerClass()
+            quizMakerObject.SignUp(username, password)
             time.sleep(1)
 
             print("""/------======------======------\                              
@@ -74,21 +75,67 @@ class QuizMaker:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            quizMaker1 = QuizMaker()
-            quizMaker1.LogIn(username, password, QuizMaker.unsuccessfulLogInAttempt)
+            quizMakerObject = QuizMakerClass()
+            quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
 
         elif signOrLogOption == 2:
             MainModules.loadingModule()
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            quizMaker1 = QuizMaker()
-            quizMaker1.LogIn(username, password, QuizMaker.unsuccessfulLogInAttempt)
+            quizMakerObject = QuizMakerClass()
+            quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
 
         else:
             MainModules.invalidInputModule()
-            QuizMaker.SignInAndLogInProcess()
+            QuizMakerClass.SignInAndLogInProcess()
 
-QuizMaker.SignInAndLogInProcess()
-quizName, quizDifficulty, questionLength, quizType = QuizConfiguration.QuizConfiguartion()
-QuizObject = QuizObject.Quiz.quizCreationModule(quizName, quizDifficulty, questionLength, quizType)
+    def quizMakerMainMenuModule(self):
+        quizMakerObject = QuizMakerClass()
+        MainModules.loadingModule()
+        mainMenuOption = int(input("""/------======------======------\                              
+|          Main  Menu          |
+\------======------======------/
+/------======------======------\ 
+| - Create a Quiz          (1) |
+| - Manage a Quiz          (2) |
+| - Delete a Quiz          (3) |
+| - Test a Quiz            (4) |
+| - Exit                   (5) |
+|                              |
+|  __________________________  |
+\------======------======------/\x1B[1F\r| """))
+        print("\------======------======------/") 
+
+        if mainMenuOption == 1:
+
+            QuizObject = QuizCreation.CreateQuizClass()
+            QuizObject.QuizCreationMainModule()
+            return quizMakerObject.quizMakerMainMenuModule()
+        
+        elif mainMenuOption == 2:
+            pass
+
+        elif mainMenuOption == 3:
+
+            QuizObject = QuizDeletion.DeleteQuizClass()
+            QuizObject.QuizDeletionMainModule()
+            return quizMakerObject.quizMakerMainMenuModule()
+        # plan:
+        # ask if quiz is mult choice or user input
+        # allow user to choose a specific quiz
+        # ask whether they want to change quiz content or the quiz settings
+
+        elif mainMenuOption == 5:
+            exit()
+
+
+        else:
+            
+            print("! not finished !")
+            MainModules.invalidInputModule()
+            quizMakerObject.quizMakerMainMenuModule()    
+
+quizMakerObject = QuizMakerClass()
+quizMakerObject.SignInAndLogInProcess()
+quizMakerObject.quizMakerMainMenuModule()

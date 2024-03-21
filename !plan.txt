@@ -1,0 +1,47 @@
+____________________________________
+ AllProgramFunctions
+ *------======------======------*
+
+ - Answering Quizzes 
+ - Updating Quizzes
+ - Deleting Quizzes
+ - Testing Quizzes
+ - Making Quizzes
+ - Managing Accounts
+ - Managing Passwords
+ - Account SignUp and LogIn
+ - Viewing Stats
+ - Progressing through the Difficulties of the Quizzes
+
+____________________________________
+ User
+ *------======------======------*
+
+ - Account SignUp and LogIn
+ - Answering Quizzes 
+ - Viewing Stats
+ - Progressing through the Difficulties of the Quizzes
+
+____________________________________
+ QuizMaker
+ *------======------======------*
+
+ - Account SignUp and LogIn
+ - Viewing Stats
+ - Testing Quizzes
+ - Updating Quizzes
+ - Deleting Quizzes
+ - Making Quizzes
+
+ ( + the Permissions of User)
+
+____________________________________
+ Administrator
+ *------======------======------*
+
+ - Account SignUp and LogIn
+ - Viewing Stats
+ - Managing Accounts
+ - Managing Passwords
+
+ ( + the Permissions of User, QuizMaker)
