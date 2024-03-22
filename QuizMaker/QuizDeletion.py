@@ -1,5 +1,9 @@
 
-import MainModules, sqlite3, time, os
+import sqlite3, time, os, sys
+
+sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+
+import MainModules
 
 class DeleteQuizClass:
 

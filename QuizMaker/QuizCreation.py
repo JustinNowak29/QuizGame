@@ -1,5 +1,10 @@
 
-import MainModules, random, sqlite3
+import random, sqlite3, sys
+
+sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+
+import MainModules
+
 
 class CreateQuizClass:
 

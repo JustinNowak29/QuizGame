@@ -1,6 +1,9 @@
 
-import MainModules, sqlite3
+import sqlite3, sys
 
+sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+
+import MainModules
 
 class EditQuizClass:
 

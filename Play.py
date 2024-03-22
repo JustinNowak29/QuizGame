@@ -1,7 +1,10 @@
-import MainModules, sqlite3, time, os
+import sqlite3, time, os, sys
+
+sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+
+import MainModules
 
 class PlayQuizClass:
-
 
     def quizSelectionTypeModule(self):
 
@@ -94,46 +97,91 @@ class PlayQuizClass:
             
         return countdownValue
 
-    def quizQuestionSQL(self, quizSelectionTypeOption, quizSelectionOption):
+    def quizUserInputGameModule(self, quizSelectionTypeOption, quizSelectionOption):
 
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
 
         if quizSelectionTypeOption == 1:
-            cursor.execute("""SELECT Answer FROM QuizUserInput WHERE QuizName = ?""", (quizSelectionOption,))
-            sqlAnswerOutput = list(cursor.fetchall())
-
-            cursor.execute("""SELECT Question FROM QuizUserInput WHERE QuizName = ?""", (quizSelectionOption,))
-            sqlQuestionOutput = list(cursor.fetchall())
+            cursor.execute("""SELECT Question, Answer, QuizXPMultiplier FROM QuizUserInput WHERE QuizName = ?""", (quizSelectionOption,))
 
         elif quizSelectionTypeOption == 2:
-            cursor.execute("""SELECT Answer FROM QuizMultipleChoice WHERE QuizName = ?""", (quizSelectionOption,))
-            sqlAnswerOutput = list(cursor.fetchall())
+            cursor.execute("""SELECT Question, Answer, QuizXPMultiplier FROM QuizMultipleChoice WHERE QuizName = ?""", (quizSelectionOption,))
 
-            cursor.execute("""SELECT Question FROM QuizMultipleChoice WHERE QuizName = ?""", (quizSelectionOption,))
-            sqlQuestionOutput = list(cursor.fetchall())
+        sqlOutput = list(cursor.fetchall())
 
-        sqlAnswerOutput = list(dict.fromkeys(sqlAnswerOutput))
-        sqlQuestionOutput = list(dict.fromkeys(sqlQuestionOutput))
         conn.commit()
         conn.close()
 
-        sqlQuestionOutput = sqlQuestionOutput[0]
-        sqlAnswerOutput = sqlAnswerOutput[0]
+        questionsCorrect = 0
+        questionsIncorrect = 0
+        xpMultiplier = sqlOutput[0][2]
+        xpGained = 0
 
-        for item in sqlQuestionOutput:
+        for item in sqlOutput:
 
             print("""/------======------======------•------======------======------\                           
 |                        You Got This!                        |
 \------======------======------•------======------======------/                             
 /------======------======------•------======------======------\ 
-| Question: """+item)
+| Question: """+item[0])
             answerInput = input("""|                                                             |
 | Enter your answer to the Question below! ↓↓↓                |
 |                                                             |
 |  _________________________________________________________  |
 \------======------======------+------======------======------/\x1B[1F\r| """)
             print("\------======------======------+------======------======------/")
+
+            if answerInput == item[1]:
+                questionsCorrect += 1
+
+                print("""/------======------======------•------======------======------\                           
+|                         Correct!!                           |
+\------======------======------•------======------======------/""")  
+
+            elif answerInput != item[1]:
+                questionsIncorrect += 1
+
+                print("""/------======------======------•------======------======------\                           
+|                        Incorrect..                          |
+| Correct Answer ---> """+item[1])
+                print("""\------======------======------•------======------======------/""")  
+                
+            MainModules.loadingModule()
+            xpGained = int(questionsCorrect * xpMultiplier * 10)
+                
+        return questionsCorrect, questionsIncorrect, xpGained
+
+    def resultsModule(self, questionsCorrect, questionsIncorrect, xpGained):
+
+        scorePercent = questionsCorrect / (questionsCorrect + questionsIncorrect) * 100
+        scorePercent = round(scorePercent, 2)
+        percentageMessage = MainModules.scorePercentageToMessageConveter(scorePercent)
+
+        print("""/------======------======------•------======------======------\                           
+|                           Results                           |
+\------======------======------•------======------======------/                             
+/------======------======------•------======------======------\ 
+| Take a look...                                              |
+| Questions Answered Correctly: """+str(questionsCorrect)+"""
+| Questions Answered Incorrectly: """+str(questionsIncorrect)+"""
+| Overall Percentage: """+str(scorePercent)+"""%, """+str(percentageMessage)+"""
+| XP Gained: """+str(xpGained)+"""
+\------======------======------•------======------======------/""")
+        
+    def quizEndModule():
+        quizEndOption = int(input("""/------======------======------\                              
+|           Continue:          |
+\------======------======------/
+/------======------======------\ 
+| - Play Quiz Again        (1) |
+| - QuizMaker              (2) |
+| - Administrator          (3) |
+|                              |
+|  __________________________  |
+\------======------======------/\x1B[1F\r| """))
+    print("\------======------======------/")
+
 
     def PlayMainModule(self):
         QuizObject = PlayQuizClass()
@@ -152,7 +200,11 @@ class PlayQuizClass:
             MainModules.loadingModule()
             QuizObject.countdown()
 
-            QuizObject.quizQuestionSQL(quizSelectionTypeOption, quizSelectionOption)
+            questionsCorrect, questionsIncorrect, xpGained = QuizObject.quizUserInputGameModule(quizSelectionTypeOption, quizSelectionOption)
+            # multiple choice needs to be added
+
+            QuizObject.resultsModule(questionsCorrect, questionsIncorrect, xpGained)
+
 
 #--------------------------------------------------------------
 #--------------------------------------------------------------
