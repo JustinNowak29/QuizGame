@@ -1,6 +1,6 @@
 import time, sqlite3, AccountManagement, sys
 
-sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
 
 import MainModules
 
@@ -10,20 +10,20 @@ class Admin:
 
     def SignUp(self, username, password):
         
-        adminPass = username, password
+        credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""INSERT INTO Admin VALUES (?,?)""", adminPass,)
+        cursor.execute("""INSERT INTO Admiun VALUES (?,?,0,0,0)""", credentials,)
 
         conn.commit()
         conn.close()
 
     def LogIn(self, username, password, unsuccessfulLogInAttempt):
 
-        adminPass = username, password
+        credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""SELECT * FROM Admin WHERE Username = ? AND Password = ?""", adminPass,)
+        cursor.execute("""SELECT * FROM Admin WHERE Username = ? AND Password = ?""", credentials,)
         logInAttempt =  cursor.fetchone()
 
         if logInAttempt:
@@ -35,6 +35,7 @@ class Admin:
 \------======------======------/""")
             
             MainModules.loadingModule()
+            return credentials
             
         else:
 
@@ -85,8 +86,9 @@ class Admin:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            admin1 = Admin()
-            admin1.LogIn(username, password, Admin.unsuccessfulLogInAttempt)
+            credentials = admin1.LogIn(username, password, Admin.unsuccessfulLogInAttempt)
+            accountType = 'Admin'
+            return accountType, credentials
 
         elif signOrLogOption == 2:
 
@@ -94,8 +96,9 @@ class Admin:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            admin1 = Admin()
-            admin1.LogIn(username, password, Admin.unsuccessfulLogInAttempt)
+            credentials = admin1.LogIn(username, password, Admin.unsuccessfulLogInAttempt)
+            accountType = 'Admin'
+            return accountType, credentials
 
         else:
             

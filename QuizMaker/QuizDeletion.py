@@ -1,7 +1,7 @@
 
 import sqlite3, time, os, sys
 
-sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
 
 import MainModules
 

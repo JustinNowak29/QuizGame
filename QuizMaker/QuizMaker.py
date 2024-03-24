@@ -1,8 +1,9 @@
-import time, sqlite3, QuizCreation, QuizDeletion, Play, sys
+import time, sqlite3, QuizCreation, QuizDeletion, sys
 
-sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame')
 
-import MainModules
+import MainModules, Play
 
 
 class QuizMakerClass:
@@ -15,19 +16,19 @@ class QuizMakerClass:
 \------======------======------/""")
 
     def SignUp(self, username, password):
-        quizMakerPass = username, password
+        credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""INSERT INTO QuizMaker VALUES (?,?)""", quizMakerPass,)
+        cursor.execute("""INSERT INTO QuizMaker VALUES (?,?,0,0,0)""", credentials,)
 
         conn.commit()
         conn.close()
 
     def LogIn(self, username, password, unsuccessfulLogInAttempt):
-        quizMakerPass = username, password
+        credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""SELECT * FROM QuizMaker WHERE Username = ? AND Password = ?""", quizMakerPass,)
+        cursor.execute("""SELECT * FROM QuizMaker WHERE Username = ? AND Password = ?""", credentials,)
         logInAttempt =  cursor.fetchone()
 
         if logInAttempt:
@@ -38,6 +39,7 @@ class QuizMakerClass:
 \------======------======------/""")
             
             MainModules.loadingModule()
+            return credentials
             
         else:
             if unsuccessfulLogInAttempt > 2:
@@ -61,7 +63,7 @@ class QuizMakerClass:
                 username = MainModules.enterUsername()
                 password = MainModules.enterPassword()
                 quizMaker1 = QuizMakerClass()
-                quizMaker1.LogIn(username, password, unsuccessfulLogInAttempt)
+                credentials = quizMaker1.LogIn(username, password, unsuccessfulLogInAttempt)
         
         conn.commit()
         conn.close()
@@ -90,7 +92,9 @@ class QuizMakerClass:
             quizMakerObject.quizMakerGUI()
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
+            credentials = quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
+            accountType = 'QuizMaker'
+            return accountType, credentials
 
         elif signOrLogOption == 2:
 
@@ -100,7 +104,9 @@ class QuizMakerClass:
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
             quizMakerObject = QuizMakerClass()
-            quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
+            credentials = quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
+            accountType = 'QuizMaker'
+            return accountType, credentials
 
         else:
 
@@ -108,7 +114,7 @@ class QuizMakerClass:
             MainModules.invalidInputModule()
             QuizMakerClass.SignInAndLogInProcess(self)
 
-    def quizMakerMainMenuModule(self):
+    def quizMakerMainMenuModule(self, accountType, credentials):
 
         MainModules.loadingModule()
         quizMakerObject.quizMakerGUI()
@@ -131,7 +137,7 @@ class QuizMakerClass:
 
             QuizObject = QuizCreation.CreateQuizClass()
             QuizObject.QuizCreationMainModule()
-            return quizMakerObject.quizMakerMainMenuModule()
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 2:
             pass
@@ -140,14 +146,13 @@ class QuizMakerClass:
 
             QuizObject = QuizDeletion.DeleteQuizClass()
             QuizObject.QuizDeletionMainModule()
-            return quizMakerObject.quizMakerMainMenuModule()
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 4:
 
             QuizObject = Play.PlayQuizClass()
-            QuizObject.PlayMainModule()
-            return quizMakerObject.quizMakerMainMenuModule()
-            # add for multiple choice also
+            QuizObject.PlayMainModule(accountType, credentials)
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
         
         # plan:
         # ask if quiz is mult choice or user input
@@ -157,13 +162,11 @@ class QuizMakerClass:
         elif mainMenuOption == 5:
             exit()
 
-
         else:
             
-            print("! not finished !")
             MainModules.invalidInputModule()
-            quizMakerObject.quizMakerMainMenuModule()    
+            quizMakerObject.quizMakerMainMenuModule(accountType, credentials) 
 
 quizMakerObject = QuizMakerClass()
-quizMakerObject.SignInAndLogInProcess()
-quizMakerObject.quizMakerMainMenuModule()
+accountType, credentials = quizMakerObject.SignInAndLogInProcess()
+quizMakerObject.quizMakerMainMenuModule(accountType, credentials)

@@ -26,10 +26,6 @@ print(v[0:5])
 # // App Development (Anroid, Flutter, React Native)
 # // Programming Languages (C, C++, JavaScript)
 
-
-
-
-
 def functione():
 
     questionMultipleChoice = input("""| Be Creative! (Maxiumum Character Length is 56)              |      

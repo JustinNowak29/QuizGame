@@ -1,6 +1,6 @@
 import sqlite3, time, os, sys
 
-sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
 
 import MainModules
 
@@ -97,25 +97,20 @@ class PlayQuizClass:
             
         return countdownValue
 
-    def quizUserInputGameModule(self, quizSelectionTypeOption, quizSelectionOption):
+    def quizUserInputGameModule(self, quizSelectionOption):
 
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
 
-        if quizSelectionTypeOption == 1:
-            cursor.execute("""SELECT Question, Answer, QuizXPMultiplier FROM QuizUserInput WHERE QuizName = ?""", (quizSelectionOption,))
-
-        elif quizSelectionTypeOption == 2:
-            cursor.execute("""SELECT Question, Answer, QuizXPMultiplier FROM QuizMultipleChoice WHERE QuizName = ?""", (quizSelectionOption,))
-
+        cursor.execute("""SELECT Question, Answer, QuizXPMultiplier FROM QuizUserInput WHERE QuizName = ?""", (quizSelectionOption,))
         sqlOutput = list(cursor.fetchall())
 
         conn.commit()
         conn.close()
 
+        xpMultiplier = sqlOutput[0][2]
         questionsCorrect = 0
         questionsIncorrect = 0
-        xpMultiplier = sqlOutput[0][2]
         xpGained = 0
 
         for item in sqlOutput:
@@ -152,7 +147,62 @@ class PlayQuizClass:
                 
         return questionsCorrect, questionsIncorrect, xpGained
 
-    def resultsModule(self, questionsCorrect, questionsIncorrect, xpGained):
+    def quizMultipleChoiceGameModule(self, quizSelectionOption):
+
+        conn = sqlite3.connect('QuizGameDataBase.db')
+        cursor = sqlite3.Cursor(conn)
+
+        cursor.execute("""SELECT Question, Choice1, Choice2, Choice3, Choice4, Answer, AnswerLetter, QuizXPMultiplier FROM QuizMultipleChoice WHERE QuizName = ?""", (quizSelectionOption,))
+        sqlOutput = list(cursor.fetchall())
+
+        conn.commit()
+        conn.close()
+
+        xpMultiplier = sqlOutput[0][7]
+        questionsCorrect = 0
+        questionsIncorrect = 0
+        xpGained = 0
+
+        for item in sqlOutput:
+
+            print("""/------======------======------•------======------======------\                           
+|                        You Got This!                        |
+\------======------======------•------======------======------/                             
+/------======------======------•------======------======------\ 
+| Question: """+item[0]+"""
+|                                                             |
+| (A) -> """+item[1]+"""
+| (B) -> """+item[2]+"""
+| (C) -> """+item[3]+"""
+| (D) -> """+item[4])
+            answerInput = input("""|                                                             |
+| Enter the correct letter below! ↓↓↓                         |
+|                                                             |
+|  _________________________________________________________  |
+\------======------======------+------======------======------/\x1B[1F\r| """)
+            print("\------======------======------+------======------======------/")
+
+            if answerInput == item[6]:
+                questionsCorrect += 1
+
+                print("""/------======------======------•------======------======------\                           
+|                         Correct!!                           |
+\------======------======------•------======------======------/""")  
+
+            elif answerInput != item[6]: 
+                questionsIncorrect += 1
+
+                print("""/------======------======------•------======------======------\                           
+|                        Incorrect..                          |
+| Correct Answer ---> """+item[5])
+                print("""\------======------======------•------======------======------/""")  
+                
+            MainModules.loadingModule()
+            xpGained = int(questionsCorrect * xpMultiplier * 10)
+                
+        return questionsCorrect, questionsIncorrect, xpGained
+
+    def resultsModule(self, questionsCorrect, questionsIncorrect, xpGained, accountType, credentials):
 
         scorePercent = questionsCorrect / (questionsCorrect + questionsIncorrect) * 100
         scorePercent = round(scorePercent, 2)
@@ -169,21 +219,80 @@ class PlayQuizClass:
 | XP Gained: """+str(xpGained)+"""
 \------======------======------•------======------======------/""")
         
-    def quizEndModule():
+        input("""/------======------======------•------======------======------\                           
+|                  Press any key to continue                  |
+\------======------======------•------======------======------/ """)
+        
+        conn = sqlite3.connect('QuizGameDataBase.db')
+        cursor = sqlite3.Cursor(conn)
+
+        username = str(credentials[0])
+        password = str(credentials[1])
+        accountType = str(accountType)
+        print(accountType, username, password)
+
+        # note for self: the code below is probably VERY reduntant, but I can't find a solution atm, come back to this later
+        if accountType == 'User':
+            cursor.execute("""UPDATE User SET XP = XP + ?, QuizzesAnswered = QuizzesAnswered + 1 WHERE Username = ? AND Password = ?""",(xpGained, username, password))
+            if scorePercent == 100:
+                cursor.execute("""UPDATE User SET QuizzesAnsweredPerfectly = QuizzesAnsweredPerfectly + 1 WHERE Username = ? AND Password = ?""",(username, password))
+        elif accountType == 'QuizMaker':
+            cursor.execute("""UPDATE QuizMaker SET XP = XP + ?, QuizzesAnswered = QuizzesAnswered + 1 WHERE Username = ? AND Password = ?""",(xpGained, username, password))
+            if scorePercent == 100:
+                cursor.execute("""UPDATE QuizMaker SET QuizzesAnsweredPerfectly = QuizzesAnsweredPerfectly + 1 WHERE Username = ? AND Password = ?""",(username, password))
+        elif accountType == 'Admin':
+            cursor.execute("""UPDATE Admin SET XP = XP + ?, QuizzesAnswered = QuizzesAnswered + 1 WHERE Username = ? AND Password = ?""",(xpGained, username, password))
+            if scorePercent == 100:
+                cursor.execute("""UPDATE Admin SET QuizzesAnsweredPerfectly = QuizzesAnsweredPerfectly + 1 WHERE Username = ? AND Password = ?""",(username, password))
+
+        conn.commit()
+        conn.close()
+
+    def quizEndModule(self, quizSelectionTypeOption, quizSelectionOption, accountType, credentials):
         quizEndOption = int(input("""/------======------======------\                              
 |           Continue:          |
 \------======------======------/
 /------======------======------\ 
 | - Play Quiz Again        (1) |
-| - QuizMaker              (2) |
-| - Administrator          (3) |
+| - Return to Menu         (2) |
+| - Exit                   (3) |
 |                              |
 |  __________________________  |
 \------======------======------/\x1B[1F\r| """))
-    print("\------======------======------/")
+        print("\------======------======------/")
 
+        if quizEndOption == 1:
+            return QuizObject.quizGameModule(quizSelectionTypeOption, quizSelectionOption, accountType, credentials)
+        
+        elif quizEndOption == 2:
+            pass
 
-    def PlayMainModule(self):
+        elif quizEndOption == 3:
+            exit()
+
+        else:
+            MainModules.invalidInputModule()
+            MainModules.loadingModule()
+            return QuizObject.quizEndModule()
+        
+    def quizGameModule(self, quizSelectionTypeOption, quizSelectionOption, accountType, credentials):
+
+        MainModules.loadingModule()
+        QuizObject.countdown()
+
+        if quizSelectionTypeOption == 1:
+                questionsCorrect, questionsIncorrect, xpGained = QuizObject.quizUserInputGameModule(quizSelectionOption)
+
+        elif quizSelectionTypeOption == 2:
+            questionsCorrect, questionsIncorrect, xpGained = QuizObject.quizMultipleChoiceGameModule(quizSelectionOption)
+
+        MainModules.loadingModule()
+        QuizObject.resultsModule(questionsCorrect, questionsIncorrect, xpGained, accountType, credentials)
+
+        MainModules.loadingModule()
+        QuizObject.quizEndModule(quizSelectionTypeOption, quizSelectionOption, accountType, credentials)
+
+    def PlayMainModule(self, accountType, credentials):
         QuizObject = PlayQuizClass()
                 
         MainModules.loadingModule()
@@ -197,17 +306,10 @@ class PlayQuizClass:
 
             quizSelectionOption = QuizObject.quizSelectionModule(quizDisplay, quizList)
 
-            MainModules.loadingModule()
-            QuizObject.countdown()
-
-            questionsCorrect, questionsIncorrect, xpGained = QuizObject.quizUserInputGameModule(quizSelectionTypeOption, quizSelectionOption)
-            # multiple choice needs to be added
-
-            QuizObject.resultsModule(questionsCorrect, questionsIncorrect, xpGained)
-
+            QuizObject.quizGameModule(quizSelectionTypeOption, quizSelectionOption, accountType, credentials)
 
 #--------------------------------------------------------------
 #--------------------------------------------------------------
 
 QuizObject = PlayQuizClass()
-QuizObject.PlayMainModule()
+# QuizObject.PlayMainModule()

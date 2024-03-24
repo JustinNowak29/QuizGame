@@ -1,7 +1,7 @@
 
 import random, sqlite3, sys
 
-sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
 
 import MainModules
 
@@ -187,8 +187,8 @@ class CreateQuizClass:
 
             for i in range(questionAmount):
 
-                questionMultipleChoice, choicesList, correctChoice = QuizObject.multipleChoiceQuizModule(questionAmount)
-                QuizObject.insertMultipleChoiceQuizSQL(newID, questionMultipleChoice, choicesList, correctChoice, quizName, quizDifficulty)
+                questionMultipleChoice, choicesList, correctChoice, correctChoiceLetter = QuizObject.multipleChoiceQuizModule(questionAmount)
+                QuizObject.insertMultipleChoiceQuizSQL(newID, questionMultipleChoice, choicesList, correctChoice, correctChoiceLetter, quizName, quizDifficulty)
                 MainModules.loadingModule()
 
         QuizObject.quizCreatedGUI()
@@ -270,7 +270,7 @@ class CreateQuizClass:
             MainModules.loadingModule()
 
             QuizObject.createAQuizGUI()
-            correctChoiceOption = int(input("""/------======------======------\                              
+            correctChoiceLetter = int(input("""/------======------======------\                              
 |        Correct Choice        |
 \------======------======------/
 /------======------======------\ 
@@ -284,25 +284,25 @@ class CreateQuizClass:
 \------======------======------/\x1B[1F\r| """))
             print("\------======------======------/")
 
-            if correctChoiceOption == 1:
+            if correctChoiceLetter == 1:
                 correctChoice = choicesList[0]
             
-            elif correctChoiceOption == 2:
+            elif correctChoiceLetter == 2:
                 correctChoice = choicesList[1]
 
-            elif correctChoiceOption == 3:
+            elif correctChoiceLetter == 3:
                 correctChoice = choicesList[2]
 
-            elif correctChoiceOption == 4:
+            elif correctChoiceLetter == 4:
                 correctChoice = choicesList[3]
 
-            return questionMultipleChoice, choicesList, correctChoice
+            return questionMultipleChoice, choicesList, correctChoice, correctChoiceLetter
         
-    def insertMultipleChoiceQuizSQL(self, newID, questionMultipleChoice, choicesList, answerMutlipleChoice, quizName, quizDifficulty):
+    def insertMultipleChoiceQuizSQL(self, newID, questionMultipleChoice, choicesList, answerMutlipleChoice, answerMutlipleChoiceLetter,quizName, quizDifficulty):
 
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""INSERT INTO QuizMultipleChoice VALUES (?,?,?,?,?,?,?,?,?)""", (newID, questionMultipleChoice, choicesList[0],choicesList[1],choicesList[2],choicesList[3], answerMutlipleChoice, quizName, quizDifficulty))
+        cursor.execute("""INSERT INTO QuizMultipleChoice VALUES (?,?,?,?,?,?,?,?,?,?)""", (newID, questionMultipleChoice, choicesList[0],choicesList[1],choicesList[2],choicesList[3], answerMutlipleChoice, answerMutlipleChoiceLetter, quizName, quizDifficulty))
 
         conn.commit()
         conn.close()

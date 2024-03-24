@@ -1,8 +1,9 @@
 import time, sqlite3, sys
 
-sys.path.append('c:/Users/Justin/Desktop/Coding/VisualStudio/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame')
 
-import MainModules
+import MainModules, Play
 
 class UserClass:
 
@@ -16,20 +17,20 @@ class UserClass:
 
     def SignUp(self, username, password):
         
-        userPass = username, password
+        credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""INSERT INTO User VALUES (?,?)""", userPass,)
+        cursor.execute("""INSERT INTO User VALUES (?,?,0,0,0)""", credentials,)
 
         conn.commit()
         conn.close()
 
     def LogIn(self, username, password, unsuccessfulLogInAttempt):
 
-        userPass = username, password
+        credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""SELECT * FROM User WHERE Username = ? AND Password = ?""", userPass,)
+        cursor.execute("""SELECT * FROM User WHERE Username = ? AND Password = ?""", credentials,)
         logInAttempt =  cursor.fetchone()
 
         if logInAttempt:
@@ -38,6 +39,8 @@ class UserClass:
             print("""/------======------======------\                              
 |      Log In Successful!      |
 \------======------======------/""")
+            
+            return credentials
             
         else:
 
@@ -62,7 +65,7 @@ class UserClass:
                 username = MainModules.enterUsername()
                 password = MainModules.enterPassword()
                 user1 = UserClass()
-                user1.LogIn(username, password, unsuccessfulLogInAttempt)
+                credentials = user1.LogIn(username, password, unsuccessfulLogInAttempt)
         
         conn.commit()
         conn.close()
@@ -90,7 +93,9 @@ class UserClass:
             user1.userGUI()
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            user1.LogIn(username, password, UserClass.unsuccessfulLogInAttempt)
+            credentials = user1.LogIn(username, password, UserClass.unsuccessfulLogInAttempt)
+            accountType = 'User'
+            return accountType, credentials
 
         elif signOrLogOption == 2:
             MainModules.loadingModule()
@@ -99,16 +104,19 @@ class UserClass:
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
             user1 = UserClass()
-            user1.LogIn(username, password, UserClass.unsuccessfulLogInAttempt)
-
+            credentials = user1.LogIn(username, password, UserClass.unsuccessfulLogInAttempt)
+            accountType = 'User'
+            return accountType, credentials
+  
         else:
             MainModules.invalidInputModule()
             UserClass.SignInAndLogInProcess()
 
-    def userMainMenuModule(self):
+    def userMainMenuModule(self, accountType, credentials):
 
         MainModules.loadingModule()
-        user1.userGUI()
+        userObject.userGUI()
+
         mainMenuOption = int(input("""/------======------======------\                              
 |          Main  Menu          |
 \------======------======------/
@@ -121,17 +129,29 @@ class UserClass:
 |  __________________________  |
 \------======------======------/\x1B[1F\r| """))
         print("\------======------======------/") 
-        return mainMenuOption
-    
-user1 = UserClass()
-user1.SignInAndLogInProcess()
-user1.userMainMenuModule()
 
+        if mainMenuOption == 1:
 
-mainMenuOptions = user1.userMainMenuModule()
-if mainMenuOptions != -345:
-    print("waiting...")
-    MainModules.loadingModule()
+            QuizObject = Play.PlayQuizClass()
+            QuizObject.PlayMainModule(accountType, credentials)
+            return userObject.userMainMenuModule(accountType, credentials)
+        
+        elif mainMenuOption == 2:
+            print("finish statistic section!")
+            pass
 
-elif mainMenuOptions == 4:
-    exit()
+        elif mainMenuOption == 3:
+            print("finish about section!")
+            pass
+        
+        elif mainMenuOption == 4:
+            exit()
+
+        else:
+            
+            MainModules.invalidInputModule()
+            userObject.userMainMenuModule(accountType, credentials)    
+
+userObject = UserClass()
+accountType, credentials = userObject.SignInAndLogInProcess()
+userObject.userMainMenuModule(accountType, credentials)
