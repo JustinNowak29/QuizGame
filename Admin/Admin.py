@@ -1,19 +1,26 @@
-import time, sqlite3, AccountManagement, sys
+
+import time, sqlite3, sys
 
 sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
+sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame')
 
-import MainModules
+import MainModules, Play
 
-class Admin:
+class AdminClass:
 
     unsuccessfulLogInAttempt = 0
+
+    def adminGUI(self):
+        print("""/------======------======------\                              
+|            Admin             |
+\------======------======------/""")
 
     def SignUp(self, username, password):
         
         credentials = username, password
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
-        cursor.execute("""INSERT INTO Admiun VALUES (?,?,0,0,0)""", credentials,)
+        cursor.execute("""INSERT INTO Admin VALUES (?,?,0,0,0)""", credentials,)
 
         conn.commit()
         conn.close()
@@ -60,22 +67,22 @@ class Admin:
                 unsuccessfulLogInAttempt += 1
                 username = MainModules.enterUsername()
                 password = MainModules.enterPassword()
-                admin1 = Admin()
+                admin1 = AdminClass()
                 admin1.LogIn(username, password, unsuccessfulLogInAttempt)
         
         conn.commit()
         conn.close()
     
-    def SignInAndLogInProcess():
+    def SignInAndLogInProcess(self):
 
+        MainModules.loadingModule()
         signOrLogOption = MainModules.signOrLogOptions()
 
         if signOrLogOption == 1:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            admin1 = Admin()
-            admin1.SignUp(username, password)
+            adminObject.SignUp(username, password)
             time.sleep(1)
 
             print("""/------======------======------\                              
@@ -86,7 +93,7 @@ class Admin:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            credentials = admin1.LogIn(username, password, Admin.unsuccessfulLogInAttempt)
+            credentials = adminObject.LogIn(username, password, AdminClass.unsuccessfulLogInAttempt)
             accountType = 'Admin'
             return accountType, credentials
 
@@ -96,18 +103,83 @@ class Admin:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            credentials = admin1.LogIn(username, password, Admin.unsuccessfulLogInAttempt)
+            credentials = adminObject.LogIn(username, password, AdminClass.unsuccessfulLogInAttempt)
             accountType = 'Admin'
             return accountType, credentials
 
         else:
             
             MainModules.invalidInputModule()
-            Admin.SignInAndLogInProcess()
+            AdminClass.SignInAndLogInProcess()
 
-Admin.SignInAndLogInProcess()
+    def adminMainMenuModule(self, accountType, credentials):
 
-#use iteration if you want to do this below more than once
-AccountManagement.spinaccountmanage()
+        MainModules.loadingModule()
+        adminObject.adminGUI()
 
-print("uvfiesdgbfiawsdf")
+        mainMenuOption = int(input("""/------======------======------\                              
+|          Main  Menu          |
+\------======------======------/
+/------======------======------\ 
+| Account Management           |
+| - Edit Accounts          (1) |
+| - Delete Accounts        (2) |
+| - View all Player Stats  (3) |
+|                              |
+| Default Options              |
+| - Play a Quiz            (4) |
+| - View Personal Stats    (5) |
+| - About                  (6) |
+| - Exit                   (7) |
+|                              |
+|  __________________________  |
+\------======------======------/\x1B[1F\r| """))
+        print("\------======------======------/") 
+
+        if mainMenuOption == 1:
+            pass
+        
+        elif mainMenuOption == 2:
+            pass
+
+        elif mainMenuOption == 3:
+            pass
+
+            # MainModules.loadingModule()
+            # MainModules.statisticsModule(accountType, credentials)
+            # return adminObject.adminMainMenuModule(accountType, credentials)
+        
+        elif mainMenuOption == 4:
+
+            QuizObject = Play.PlayQuizClass()
+            QuizObject.PlayMainModule(accountType, credentials)
+            return adminObject.adminMainMenuModule(accountType, credentials)
+
+        elif mainMenuOption == 5:
+
+            MainModules.loadingModule()
+            MainModules.statisticsModule(accountType, credentials)
+            return adminObject.adminMainMenuModule(accountType, credentials)
+
+        elif mainMenuOption == 6:
+
+            MainModules.loadingModule()
+            MainModules.aboutModule()
+            return adminObject.adminMainMenuModule(accountType, credentials)
+        
+        elif mainMenuOption == 7:
+            exit()
+
+        else:
+            
+            MainModules.invalidInputModule()
+            return adminObject.adminMainMenuModule(accountType, credentials)
+
+adminObject = AdminClass()
+accountType, credentials = adminObject.SignInAndLogInProcess()
+adminObject.adminMainMenuModule(accountType, credentials)
+
+# AdminClass.SignInAndLogInProcess()
+
+# #use iteration if you want to do this below more than once
+# AccountManagement.spinaccountmanage()

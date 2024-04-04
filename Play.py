@@ -1,3 +1,4 @@
+
 import sqlite3, time, os, sys
 
 sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
@@ -63,6 +64,7 @@ class PlayQuizClass:
 /------======------======------\ 
 | Enter a specific Quiz:       |""")
         for quizName in quizDisplay:
+            print("| -                            |", end='\r')
             print(quizName)
         quizSelectionOption = input("""|                              |
 |  __________________________  |
@@ -212,12 +214,16 @@ class PlayQuizClass:
 |                           Results                           |
 \------======------======------•------======------======------/                             
 /------======------======------•------======------======------\ 
-| Take a look...                                              |
-| Questions Answered Correctly: """+str(questionsCorrect)+"""
-| Questions Answered Incorrectly: """+str(questionsIncorrect)+"""
-| Overall Percentage: """+str(scorePercent)+"""%, """+str(percentageMessage)+"""
-| XP Gained: """+str(xpGained)+"""
-\------======------======------•------======------======------/""")
+| Take a look...                                              |""")
+        
+        checkingQuizResultsList = ["""| Questions Answered Correctly: """+str(questionsCorrect),
+            """| Questions Answered Incorrectly: """+str(questionsIncorrect),
+            """| Overall Percentage: """+str(scorePercent)+"""%, """+str(percentageMessage),
+            """| XP Gained: """+str(xpGained)]
+
+        for item in checkingQuizResultsList:
+            print("""|                                                             |""", end='\r')
+            print(item)
         
         input("""/------======------======------•------======------======------\                           
 |                  Press any key to continue                  |
@@ -229,7 +235,7 @@ class PlayQuizClass:
         username = str(credentials[0])
         password = str(credentials[1])
         accountType = str(accountType)
-        print(accountType, username, password)
+        # print(accountType, username, password)
 
         # note for self: the code below is probably VERY reduntant, but I can't find a solution atm, come back to this later
         if accountType == 'User':
@@ -273,7 +279,7 @@ class PlayQuizClass:
         else:
             MainModules.invalidInputModule()
             MainModules.loadingModule()
-            return QuizObject.quizEndModule()
+            return QuizObject.quizEndModule(quizSelectionTypeOption, quizSelectionOption, accountType, credentials)
         
     def quizGameModule(self, quizSelectionTypeOption, quizSelectionOption, accountType, credentials):
 

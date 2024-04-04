@@ -50,3 +50,11 @@ elif accountType == 'Admin':
 
 conn.commit()
 conn.close()
+
+# +------======------======------+
+# | Choose amount of XP Given:   |
+# | - 5 XP                   (1) |
+# | - 10 XP                  (2) |
+# | - 20 XP                  (3) |
+# |                              |
+# |  __________________________  |"""

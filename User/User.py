@@ -1,3 +1,4 @@
+
 import time, sqlite3, sys
 
 sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
@@ -13,7 +14,6 @@ class UserClass:
         print("""/------======------======------\                              
 |             User             |
 \------======------======------/""")
-
 
     def SignUp(self, username, password):
         
@@ -122,7 +122,7 @@ class UserClass:
 \------======------======------/
 /------======------======------\ 
 | - Play a Quiz!           (1) |
-| - View Statistics        (2) |
+| - View Personal Stats    (2) |
 | - About                  (3) |
 | - Exit                   (4) |
 |                              |
@@ -137,12 +137,16 @@ class UserClass:
             return userObject.userMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 2:
-            print("finish statistic section!")
-            pass
+
+            MainModules.loadingModule()
+            MainModules.statisticsModule(accountType, credentials)
+            return userObject.userMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 3:
-            print("finish about section!")
-            pass
+
+            MainModules.loadingModule()
+            MainModules.aboutModule()
+            return userObject.userMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 4:
             exit()
@@ -150,7 +154,7 @@ class UserClass:
         else:
             
             MainModules.invalidInputModule()
-            userObject.userMainMenuModule(accountType, credentials)    
+            return userObject.userMainMenuModule(accountType, credentials)    
 
 userObject = UserClass()
 accountType, credentials = userObject.SignInAndLogInProcess()

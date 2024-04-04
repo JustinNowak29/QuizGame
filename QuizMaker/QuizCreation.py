@@ -46,9 +46,9 @@ class CreateQuizClass:
         QuizObject.createAQuizGUI2()
         chooseQuizDifficultyList = [('Easy', 1), ('Medium', 1.5), ('Hard', 2)]
         chooseQuizDifficultyOption = int(input("""| Input Question Difficulty:   |                              |
-| - Easy    // 1x EXP      (1) |                              |
-| - Medium  // 1.5x EXP    (2) |                              |       
-| - Hard    // 2x EXP      (3) |                              |
+| - Easy    // 1x   XP     (1) |                              |
+| - Medium  // 1.5x XP     (2) |                              |       
+| - Hard    // 2x   XP     (3) |                              |
 |                              |                              |
 |  __________________________  |                              |
 \------======------======------+------======------======------/\x1B[1F\r| """))
@@ -119,11 +119,17 @@ class CreateQuizClass:
 
     def confirmQuizFeaturesModule(self, quizName, quizDifficulty, questionAmount, quizType):
         QuizObject.createAQuizGUI2()
-        confirmQuizFeaturesOption = int(input("""| Take a look... -->           | * """+str(quizName)+""" *
-| Continue?                    | Quiz Difficutly: """+str(quizDifficulty[0][0])+"""
-| - Yes, Continue          (1) | Question Length: """+str(questionAmount)+""" 
-| - No, Return             (2) | """+str(quizType)+"""         |
-|                              |                              |
+
+        checkingQuizFeaturesList = ["""| Take a look... -->           | * """+quizName+" *",
+                """| Continue?                    | Quiz Difficutly: """+(quizDifficulty[0][0]),
+                """| - Yes, Continue          (1) | Question Length: """+str(questionAmount),
+                """| - No, Return             (2) | """+quizType]
+
+        for item in checkingQuizFeaturesList:
+            print("""|                                                             |""", end='\r')
+            print(item)
+
+        confirmQuizFeaturesOption = int(input("""|                              |                              |
 |  __________________________  |                              |
 \------======------======------+------======------======------/\x1B[1F\r| """))
         print("\------======------======------+------======------======------/")
@@ -215,7 +221,7 @@ class CreateQuizClass:
 
         else:
             answerUserInput = input("""/------======------======------•------======------======------\      
-| Enter An Answer To The Question:                           |
+| Enter An Answer To The Question:                            |
 |                                                             |
 |  _________________________________________________________  |
 \------======------======------+------======------======------/\x1B[1F\r| """)

@@ -1,5 +1,8 @@
-import time, os
+import time, os, sqlite3
 from subprocess import call
+
+def openGuestPythonFile():
+        call(["python", "Guest/Guest.py"])
 
 def openUserPythonFile():
         call(["python", "User/User.py"])
@@ -29,19 +32,22 @@ def accountOptionModule():
 |   Choose your Account Type   |
 \------======------======------/
 /------======------======------\ 
-| - User                   (1) |
-| - QuizMaker              (2) |
-| - Administrator          (3) |
+| - Guest                  (1) |
+| - User                   (2) |
+| - QuizMaker              (3) |
+| - Administrator          (4) |
 |                              |
 |  __________________________  |
 \------======------======------/\x1B[1F\r| """))
     print("\------======------======------/")
 
     if accountOption == 1:
-        openUserPythonFile()
+        openGuestPythonFile()
     elif accountOption == 2:
+        openUserPythonFile()
+    elif accountOption == 3:
         openQuizMakerPythonFile()
-    elif accountOption  == 3:
+    elif accountOption  == 4:
         openAdminPythonFile()
     else:
         print("""/------======------======------\ 
@@ -112,13 +118,66 @@ def scorePercentageToMessageConveter(percentage):
 
     return message
 
+def statisticsModule(accountType, credentials):
+
+    username = str(credentials[0])
+    password = str(credentials[1])
+
+    conn = sqlite3.connect('QuizGameDataBase.db')
+    cursor = sqlite3.Cursor(conn)
+
+    # note for self: the code below is probably VERY reduntant, but I can't find a solution atm, come back to this later
+    if accountType == 'User':
+        cursor.execute("""SELECT * FROM User WHERE Username = ? AND Password = ?""",(username, password))
+
+    elif accountType == 'QuizMaker':
+        cursor.execute("""SELECT * FROM QuizMaker WHERE Username = ? AND Password = ?""",(username, password))
+            
+    elif accountType == 'Admin':
+        cursor.execute("""SELECT * FROM Admin WHERE Username = ? AND Password = ?""",(username, password))
+
+    sqlOutput = cursor.fetchall()[0]
+
+    conn.commit()
+    conn.close()
+
+    print("""/------======------======------•------======------======------\                           
+|                         Statistics!                         |
+\------======------======------•------======------======------/                             
+/------======------======------•------======------======------\ 
+| Take a look...                                              |""")
+
+    checkingAccountStatsList = ["""| Username: """+str(sqlOutput[0]),
+        """| Password: """+str(sqlOutput[1]),
+        """| """,
+        """| Total XP: """+str(sqlOutput[2]),
+        """| Quizzes Answered: """+str(sqlOutput[3]),
+        """| Quizzes Answered Perfectly: """+str(sqlOutput[4])]
+
+    for item in checkingAccountStatsList:
+        print("""|                                                             |""", end='\r')
+        print(item)
+        
+    input("""/------======------======------•------======------======------\                           
+|                   Press any key to return                   |
+\------======------======------•------======------======------/ """)
+    
+def aboutModule():
+    print("""/------======------======------•------======------======------\                           
+|                            About                            |
+\------======------======------•------======------======------/                             
+/------======------======------•------======------======------\ 
+| Welcome to the QuizGame!                                    |
+|                                                             |
+| Test your knowledge with our challenging trivia questions,  |
+| about various topics and subjects. You will be able to gain |
+| XP points if you answer the questions correctly, so make    |
+| sure to gain as much points as possible!                    |
+|                                                             |
+| Have fun!                                                   |
+\------======------======------•------======------======------/""")
+            
+    input("""/------======------======------•------======------======------\                           
+|                   Press any key to return                   |
+\------======------======------•------======------======------/ """)
      
-
-
-# +------======------======------+
-# | Choose amount of XP Given:   |
-# | - 5 XP                   (1) |
-# | - 10 XP                  (2) |
-# | - 20 XP                  (3) |
-# |                              |
-# |  __________________________  |"""

@@ -1,3 +1,4 @@
+
 import time, sqlite3, QuizCreation, QuizDeletion, sys
 
 sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
@@ -123,11 +124,16 @@ class QuizMakerClass:
 |          Main  Menu          |
 \------======------======------/
 /------======------======------\ 
+| Quiz Management              |
 | - Create a Quiz          (1) |
 | - Manage a Quiz          (2) |
 | - Delete a Quiz          (3) |
+|                              |
+| Default Options              |
 | - Play a Quiz            (4) |
-| - Exit                   (5) |
+| - View Personal Stats    (5) |
+| - About                  (6) |
+| - Exit                   (7) |
 |                              |
 |  __________________________  |
 \------======------======------/\x1B[1F\r| """))
@@ -140,7 +146,9 @@ class QuizMakerClass:
             return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 2:
-            pass
+            
+            print("not added yet!")
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 3:
 
@@ -155,17 +163,27 @@ class QuizMakerClass:
             return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
         
         # plan:
-        # ask if quiz is mult choice or user input
-        # allow user to choose a specific quiz
         # ask whether they want to change quiz content or the quiz settings
 
         elif mainMenuOption == 5:
+
+            MainModules.loadingModule()
+            MainModules.statisticsModule(accountType, credentials)
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+
+        elif mainMenuOption == 6:
+
+            MainModules.loadingModule()
+            MainModules.aboutModule()
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+        
+        elif mainMenuOption == 7:
             exit()
 
         else:
             
             MainModules.invalidInputModule()
-            quizMakerObject.quizMakerMainMenuModule(accountType, credentials) 
+            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials) 
 
 quizMakerObject = QuizMakerClass()
 accountType, credentials = quizMakerObject.SignInAndLogInProcess()

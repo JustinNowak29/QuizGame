@@ -72,6 +72,7 @@ class DeleteQuizClass:
 /------======------======------\ 
 | Enter a specific Quiz:       |""")
         for quizName in quizDisplay:
+            print("| -                            |", end='\r')
             print(quizName)
         quizSelectionOption = input("""|                              |
 |  __________________________  |
