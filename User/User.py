@@ -112,10 +112,10 @@ class UserClass:
             MainModules.invalidInputModule()
             UserClass.SignInAndLogInProcess()
 
-    def userMainMenuModule(self, accountType, credentials):
+    def UserMainMenuModule(self, accountType, credentials):
 
         MainModules.loadingModule()
-        userObject.userGUI()
+        UserObject.userGUI()
 
         mainMenuOption = int(input("""/------======------======------\                              
 |          Main  Menu          |
@@ -134,19 +134,19 @@ class UserClass:
 
             QuizObject = Play.PlayQuizClass()
             QuizObject.PlayMainModule(accountType, credentials)
-            return userObject.userMainMenuModule(accountType, credentials)
+            return UserObject.UserMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 2:
 
             MainModules.loadingModule()
             MainModules.statisticsModule(accountType, credentials)
-            return userObject.userMainMenuModule(accountType, credentials)
+            return UserObject.UserMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 3:
 
             MainModules.loadingModule()
             MainModules.aboutModule()
-            return userObject.userMainMenuModule(accountType, credentials)
+            return UserObject.UserMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 4:
             exit()
@@ -154,8 +154,8 @@ class UserClass:
         else:
             
             MainModules.invalidInputModule()
-            return userObject.userMainMenuModule(accountType, credentials)    
+            return UserObject.UserMainMenuModule(accountType, credentials)    
 
-userObject = UserClass()
-accountType, credentials = userObject.SignInAndLogInProcess()
-userObject.userMainMenuModule(accountType, credentials)
+UserObject = UserClass()
+accountType, credentials = UserObject.SignInAndLogInProcess()
+UserObject.UserMainMenuModule(accountType, credentials)

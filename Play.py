@@ -13,7 +13,7 @@ class PlayQuizClass:
 |          Quiz Type:          |
 \------======------======------/
 /------======------======------\ 
-| Enter type of Quiz:          |
+| Enter the type of Quiz:      |
 | - User Input             (1) |
 | - Multiple Choice        (2) |
 | - Return to Main Menu    (3) |
@@ -120,8 +120,9 @@ class PlayQuizClass:
             print("""/------======------======------•------======------======------\                           
 |                        You Got This!                        |
 \------======------======------•------======------======------/                             
-/------======------======------•------======------======------\ 
-| Question: """+item[0])
+/------======------======------•------======------======------\ """)
+            print("""|                                                             |""", end='\r')
+            print("| Question: """+item[0])
             answerInput = input("""|                                                             |
 | Enter your answer to the Question below! ↓↓↓                |
 |                                                             |
@@ -140,9 +141,10 @@ class PlayQuizClass:
                 questionsIncorrect += 1
 
                 print("""/------======------======------•------======------======------\                           
-|                        Incorrect..                          |
-| Correct Answer ---> """+item[1])
-                print("""\------======------======------•------======------======------/""")  
+|                        Incorrect..                          |""")
+                print("""|                                                             |""", end='\r')
+                print("| Correct Answer ---> """+item[1],"""
+\------======------======------•------======------======------/""")  
                 
             MainModules.loadingModule()
             xpGained = int(questionsCorrect * xpMultiplier * 10)
@@ -170,13 +172,19 @@ class PlayQuizClass:
             print("""/------======------======------•------======------======------\                           
 |                        You Got This!                        |
 \------======------======------•------======------======------/                             
-/------======------======------•------======------======------\ 
-| Question: """+item[0]+"""
-|                                                             |
-| (A) -> """+item[1]+"""
-| (B) -> """+item[2]+"""
-| (C) -> """+item[3]+"""
-| (D) -> """+item[4])
+/------======------======------•------======------======------\ """) 
+            
+            questionAnswerList = ["| Question: """+item[0],
+                "|                                                             |",
+                "| (A) -> "+item[1],
+                "| (B) -> "+item[2],
+                "| (C) -> "+item[3],
+                "| (D) -> "+item[4]]
+        
+            for line in questionAnswerList:
+                print("""|                                                             |""", end='\r')
+                print(line)
+
             answerInput = input("""|                                                             |
 | Enter the correct letter below! ↓↓↓                         |
 |                                                             |
@@ -195,10 +203,11 @@ class PlayQuizClass:
                 questionsIncorrect += 1
 
                 print("""/------======------======------•------======------======------\                           
-|                        Incorrect..                          |
-| Correct Answer ---> """+item[5])
-                print("""\------======------======------•------======------======------/""")  
-                
+|                        Incorrect..                          |""")
+                print("""|                                                             |""", end='\r')
+                print("| Correct Answer ---> """+item[5],"""
+\------======------======------•------======------======------/""")  
+
             MainModules.loadingModule()
             xpGained = int(questionsCorrect * xpMultiplier * 10)
                 

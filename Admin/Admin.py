@@ -1,5 +1,5 @@
 
-import time, sqlite3, sys
+import time, sqlite3, sys, AccountDeletion, AccountStatistics
 
 sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame/Main')
 sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGame')
@@ -82,7 +82,7 @@ class AdminClass:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            adminObject.SignUp(username, password)
+            AdminObject.SignUp(username, password)
             time.sleep(1)
 
             print("""/------======------======------\                              
@@ -93,7 +93,7 @@ class AdminClass:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            credentials = adminObject.LogIn(username, password, AdminClass.unsuccessfulLogInAttempt)
+            credentials = AdminObject.LogIn(username, password, AdminClass.unsuccessfulLogInAttempt)
             accountType = 'Admin'
             return accountType, credentials
 
@@ -103,19 +103,20 @@ class AdminClass:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            credentials = adminObject.LogIn(username, password, AdminClass.unsuccessfulLogInAttempt)
+            credentials = AdminObject.LogIn(username, password, AdminClass.unsuccessfulLogInAttempt)
             accountType = 'Admin'
             return accountType, credentials
 
         else:
             
             MainModules.invalidInputModule()
-            AdminClass.SignInAndLogInProcess()
+            AdminObject.SignInAndLogInProcess()
 
-    def adminMainMenuModule(self, accountType, credentials):
+    def AdminMainMenuModule(self, accountType, credentials):
+        AdminObject = AdminClass()
 
         MainModules.loadingModule()
-        adminObject.adminGUI()
+        AdminObject.adminGUI()
 
         mainMenuOption = int(input("""/------======------======------\                              
 |          Main  Menu          |
@@ -140,32 +141,34 @@ class AdminClass:
             pass
         
         elif mainMenuOption == 2:
-            pass
+                        
+            AccountObject = AccountDeletion.DeleteAccountClass()
+            AccountObject.AccountDeletionMainModule()
+            return AdminObject.AdminMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 3:
-            pass
 
-            # MainModules.loadingModule()
-            # MainModules.statisticsModule(accountType, credentials)
-            # return adminObject.adminMainMenuModule(accountType, credentials)
+            AccountObject = AccountStatistics.ViewAccountStatsClass()
+            AccountObject. AccountStatisticsMainModule()
+            return AdminObject.AdminMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 4:
 
             QuizObject = Play.PlayQuizClass()
             QuizObject.PlayMainModule(accountType, credentials)
-            return adminObject.adminMainMenuModule(accountType, credentials)
+            return AdminObject.AdminMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 5:
 
             MainModules.loadingModule()
             MainModules.statisticsModule(accountType, credentials)
-            return adminObject.adminMainMenuModule(accountType, credentials)
+            return AdminObject.AdminMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 6:
 
             MainModules.loadingModule()
             MainModules.aboutModule()
-            return adminObject.adminMainMenuModule(accountType, credentials)
+            return AdminObject.AdminMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 7:
             exit()
@@ -173,13 +176,11 @@ class AdminClass:
         else:
             
             MainModules.invalidInputModule()
-            return adminObject.adminMainMenuModule(accountType, credentials)
+            return AdminObject.AdminMainMenuModule(accountType, credentials)
 
-adminObject = AdminClass()
-accountType, credentials = adminObject.SignInAndLogInProcess()
-adminObject.adminMainMenuModule(accountType, credentials)
-
-# AdminClass.SignInAndLogInProcess()
+AdminObject = AdminClass()
+accountType, credentials = AdminObject.SignInAndLogInProcess()
+AdminObject.AdminMainMenuModule(accountType, credentials)
 
 # #use iteration if you want to do this below more than once
 # AccountManagement.spinaccountmanage()

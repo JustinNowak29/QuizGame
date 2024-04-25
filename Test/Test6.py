@@ -20,3 +20,11 @@ checkingQuizFeaturesList = ["""| Take a look... -->           | * """+quizName+"
 for item in checkingQuizFeaturesList:
     print("""|                                                             |""", end='\r')
     print(item)
+
+
+questionAnswerList = ["| Question: """+item[0],
+       "|                                                             |",
+       "| (A) -> "+item[1],
+       "| (B) -> "+item[2],
+       "| (C) -> "+item[3],
+       "| (D) -> "+item[4]]

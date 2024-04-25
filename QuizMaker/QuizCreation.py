@@ -23,7 +23,6 @@ class CreateQuizClass:
 /------======------======------+------======------======------\ """)
         
     def createAQuizGUI3(self):
-
         print("""/------======------======------•------======------======------\                           
 |                        Create A Quiz                        |
 \------======------======------•------======------======------/
@@ -35,10 +34,21 @@ class CreateQuizClass:
     def chooseQuizNameModule(self):
         QuizObject.createAQuizGUI2()
         chooseQuizNameOption = input("""| Input Quiz Name:             |                              |
+| (Maxiumum Character Length   |                              |
+|  is 26)                      |                              |
 |                              |                              |
 |  __________________________  |                              |
 \------======------======------+------======------======------/\x1B[1F\r| """)
         print("\------======------======------+------======------======------/") 
+
+        if len(chooseQuizNameOption) > 26:
+            print("""/------======------======------\                              
+|  Input exceeds 26 Character  |
+|       Limit, Try Again       |
+\------======------======------/""")
+            
+            MainModules.loadingModule()
+            return QuizObject.chooseQuizNameModule()
 
         return chooseQuizNameOption
 

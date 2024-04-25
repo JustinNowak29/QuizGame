@@ -5,93 +5,92 @@ sys.path.append('c:/Users/Justin/Desktop/Coding/ObjectOrientedProgramming/QuizGa
 
 import MainModules
 
-class DeleteQuizClass:
+class DeleteAccountClass:
 
-    def deleteAQuizGUI(self):
+    def deleteAnAccountGUI(self):
         print("""/------======------======------\         
-|        Delete A Quiz!        |
+|      Delete an Account!      |
 \------======------======------/ """)
 
-    def quizSelectionTypeModule(self):
+    def accountSelectionTypeModule(self):
 
-        QuizObject.deleteAQuizGUI()
-        quizSelectionTypeOption = int(input("""/------======------======------\                              
-|          Quiz Type:          |
+        accountSelectionTypeOption = int(input("""/------======------======------\                              
+|         Account Type         |
 \------======------======------/
 /------======------======------\ 
-| Enter type of Quiz:          |
-| - User Input             (1) |
-| - Multiple Choice        (2) |
+| Enter a specific Account     |
+| type:                        |
+| - User                   (1) |
+| - Quiz Maker             (2) |
 | - Return to Main Menu    (3) |
 |                              |
 |  __________________________  |
 \------======------======------/\x1B[1F\r| """))
         print("\------======------======------/")
         
-        if quizSelectionTypeOption >= 1 or quizSelectionTypeOption <= 3:
-            return quizSelectionTypeOption         
+        if accountSelectionTypeOption >= 1 or accountSelectionTypeOption <= 3:
+            return accountSelectionTypeOption         
         
         else:
             MainModules.invalidInputModule()
             MainModules.loadingModule()
-            return QuizObject.quizSelectionTypeModule()
+            return AccountObject.accountSelectionTypeModule()
         
-    def quizNameSQL(self, quizSelectionTypeOption):
+    def accountNameSQL(self, accountSelectionTypeOption):
 
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
 
-        if quizSelectionTypeOption == 1:
-            cursor.execute("""SELECT QuizName FROM QuizUserInput ORDER BY QuizName ASC""")
+        if accountSelectionTypeOption == 1:
+            cursor.execute("""SELECT Username FROM User ORDER BY Username ASC""")
 
-        elif quizSelectionTypeOption == 2:
-            cursor.execute("""SELECT QuizName FROM QuizMultipleChoice ORDER BY QuizName ASC""")
+        elif accountSelectionTypeOption == 2:
+            cursor.execute("""SELECT Username FROM QuizMaker ORDER BY Username ASC""")
 
         sqlOutput = list(cursor.fetchall())
         sqlOutput = list(dict.fromkeys(sqlOutput))
         conn.commit()
         conn.close()
 
-        quizList = []
-        quizDisplay = []
+        accountList = []
+        accountDisplay = []
 
         for item in sqlOutput:
 
             tupleToStringConveter = (list(item)[0])
-            quizDisplay.append("| - " + str(tupleToStringConveter))
-            quizList.append(tupleToStringConveter)
+            accountDisplay.append("| - " + str(tupleToStringConveter))
+            accountList.append(tupleToStringConveter)
 
-        return quizDisplay, quizList
+        return accountDisplay, accountList
 
-    def quizSelectionModule(self, quizDisplay, quizList):
-
-        QuizObject.deleteAQuizGUI()
+    def accountSelectionModule(self, accountDisplay, accountList):
         print("""/------======------======------\                              
-|          Quiz List:          |
+|         Account List         |
 \------======------======------/
 /------======------======------\ 
-| Enter a specific Quiz:       |""")
-        for quizName in quizDisplay:
+| Enter a specific Account:    |""")
+        for accountName in accountDisplay:
             print("| -                            |", end='\r')
-            print(quizName)
-        quizSelectionOption = input("""|                              |
+            print(accountName)
+        accountSelectionOption = input("""|                              |
 |  __________________________  |
 \------======------======------/\x1B[1F\r| """)
+        
         print("\------======------======------/")
 
         correctInputChecker = 0
 
-        for quizListe in quizList:
-            if quizSelectionOption == quizListe:
+        for quizListe in accountList:
+            if accountSelectionOption == quizListe:
                 correctInputChecker = 1
 
         if correctInputChecker != 1:
             MainModules.invalidInputModule()
             MainModules.loadingModule()
-            return QuizObject.quizSelectionModule(quizDisplay, quizList)
+            return AccountObject.accountSelectionModule(accountDisplay, accountList)
         
-        return quizSelectionOption
-
+        return accountSelectionOption
+    
     def countdown(self):
 
         value = 5
@@ -104,11 +103,11 @@ class DeleteQuizClass:
 \------======------======------/""")
             
         return value
-
+    
     def confirmationModule(self):
 
-        QuizObject.countdown()
-        QuizObject.deleteAQuizGUI()
+        AccountObject.countdown()
+        AccountObject.deleteAnAccountGUI()
         confirmationOption = int(input("""/------======------======------\ 
 | Are you sure?                |
 | - Yes                    (1) |
@@ -124,73 +123,65 @@ class DeleteQuizClass:
         
         elif confirmationOption == 2:
             MainModules.loadingModule()    
-            return QuizObject.QuizDeletionMainModule()
+            return AccountObject.AccountDeletionMainModule()
 
         else:
             MainModules.invalidInputModule()
             MainModules.loadingModule()    
-            return QuizObject.confirmationModule()
-
-    def quizDeletionSQL(self, quizSelectionTypeOption, quizSelectionOption):
+            return AccountObject.confirmationModule()
+        
+    def accountDeletionSQL(self, accountSelectionTypeOptionn, accountSelectionOption):
 
         conn = sqlite3.connect('QuizGameDataBase.db')
         cursor = sqlite3.Cursor(conn)
 
-        if quizSelectionTypeOption == 1:
-            cursor.execute("""DELETE FROM QuizUserInput WHERE QuizName = ?""", (quizSelectionOption,))
+        if accountSelectionTypeOptionn == 1:
+            cursor.execute("""DELETE FROM User WHERE Username = ?""", (accountSelectionOption,))
 
-        elif quizSelectionTypeOption == 2:
-            cursor.execute("""DELETE FROM QuizMultipleChoice WHERE QuizName = ?""", (quizSelectionOption,))
+        elif accountSelectionTypeOptionn == 2:
+            cursor.execute("""DELETE FROM QuizMaker WHERE Username = ?""", (accountSelectionOption,))
 
         conn.commit()
         conn.close()
 
-    def quizDeletedGUI(self):
+    def accountDeletedGUI(self):
 
-        QuizObject.deleteAQuizGUI()
+        AccountObject.deleteAnAccountGUI()
         print("""/------======------======------\                              
-|         Quiz Deleted         |
+|       Account Deleted!       |
 \------======------======------/""")
-
-    def QuizDeletionMainModule(self):
-        QuizObject = DeleteQuizClass()
+    
+    def AccountDeletionMainModule(self):
+        AccountObject = DeleteAccountClass()
                 
         MainModules.loadingModule()
-        quizSelectionTypeOption = QuizObject.quizSelectionTypeModule()
-        stayInModule = quizSelectionTypeOption
+        accountSelectionTypeOption = AccountObject.accountSelectionTypeModule()
+        stayInModule = accountSelectionTypeOption
 
         if stayInModule != 3:
 
             MainModules.loadingModule()
-            quizDisplay, quizList = QuizObject.quizNameSQL(quizSelectionTypeOption)
+            accountDisplay, accountList = AccountObject.accountNameSQL(accountSelectionTypeOption)
 
-            quizSelectionOption = QuizObject.quizSelectionModule(quizDisplay, quizList)
+            accountSelectionOption = AccountObject.accountSelectionModule(accountDisplay, accountList)
             
             MainModules.loadingModule()
-            confirmationOption = QuizObject.confirmationModule()
+            confirmationOption = AccountObject.confirmationModule()
 
             if confirmationOption == 1:
 
                 MainModules.loadingModule()
-                QuizObject.quizDeletionSQL(quizSelectionTypeOption, quizSelectionOption)
+                AccountObject.accountDeletionSQL(accountSelectionTypeOption, accountSelectionOption)
 
-                QuizObject.quizDeletedGUI()
+                AccountObject.accountDeletedGUI()
                 MainModules.loadingModule()
 
 
 #--------------------------------------------------------------
 #--------------------------------------------------------------
 
-QuizObject = DeleteQuizClass()
-# QuizObject.QuizDeletionMainModule()
+AccountObject = DeleteAccountClass()
+# AccountObject.AccountDeletionMainModule()
 
 #--------------------------------------------------------------
 #--------------------------------------------------------------
-
-# quizSelectionTypeOption = quizSelectionTypeModule()
-# quizSelectionModule()
-
-# quizSelectionTypeOption = 1
-# w = sqlQuizNameModule(quizSelectionTypeOption)
-# for w in w:
-#     print(w)

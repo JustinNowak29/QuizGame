@@ -63,25 +63,24 @@ class QuizMakerClass:
                 unsuccessfulLogInAttempt += 1
                 username = MainModules.enterUsername()
                 password = MainModules.enterPassword()
-                quizMaker1 = QuizMakerClass()
-                credentials = quizMaker1.LogIn(username, password, unsuccessfulLogInAttempt)
+                credentials = QuizMakerObject.LogIn(username, password, unsuccessfulLogInAttempt)
         
         conn.commit()
         conn.close()
     
     def SignInAndLogInProcess(self):
-        quizMakerObject = QuizMakerClass()
+        QuizMakerObject = QuizMakerClass()
 
         MainModules.loadingModule()
 
-        quizMakerObject.quizMakerGUI()
+        QuizMakerObject.quizMakerGUI()
         signOrLogOption = MainModules.signOrLogOptions()
 
         if signOrLogOption == 1:
 
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            quizMakerObject.SignUp(username, password)
+            QuizMakerObject.SignUp(username, password)
             time.sleep(1)
 
             print("""/------======------======------\                              
@@ -90,10 +89,9 @@ class QuizMakerClass:
             
             MainModules.loadingModule()
 
-            quizMakerObject.quizMakerGUI()
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            credentials = quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
+            credentials = QuizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
             accountType = 'QuizMaker'
             return accountType, credentials
 
@@ -101,24 +99,22 @@ class QuizMakerClass:
 
             MainModules.loadingModule()
 
-            quizMakerObject.quizMakerGUI()
             username = MainModules.enterUsername()
             password = MainModules.enterPassword()
-            quizMakerObject = QuizMakerClass()
-            credentials = quizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
+            QuizMakerObject = QuizMakerClass()
+            credentials = QuizMakerObject.LogIn(username, password, QuizMakerClass.unsuccessfulLogInAttempt)
             accountType = 'QuizMaker'
             return accountType, credentials
 
         else:
 
-            quizMakerObject.quizMakerGUI()
             MainModules.invalidInputModule()
-            QuizMakerClass.SignInAndLogInProcess(self)
+            QuizMakerObject.SignInAndLogInProcess(self)
 
-    def quizMakerMainMenuModule(self, accountType, credentials):
+    def QuizMakerMainMenuModule(self, accountType, credentials):
 
         MainModules.loadingModule()
-        quizMakerObject.quizMakerGUI()
+        QuizMakerObject.quizMakerGUI()
 
         mainMenuOption = int(input("""/------======------======------\                              
 |          Main  Menu          |
@@ -143,39 +139,38 @@ class QuizMakerClass:
 
             QuizObject = QuizCreation.CreateQuizClass()
             QuizObject.QuizCreationMainModule()
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 2:
             
+            # resume work on this at some point #
+
             print("not added yet!")
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 3:
 
             QuizObject = QuizDeletion.DeleteQuizClass()
             QuizObject.QuizDeletionMainModule()
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 4:
 
             QuizObject = Play.PlayQuizClass()
             QuizObject.PlayMainModule(accountType, credentials)
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
-        
-        # plan:
-        # ask whether they want to change quiz content or the quiz settings
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 5:
 
             MainModules.loadingModule()
             MainModules.statisticsModule(accountType, credentials)
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)
 
         elif mainMenuOption == 6:
 
             MainModules.loadingModule()
             MainModules.aboutModule()
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)
         
         elif mainMenuOption == 7:
             exit()
@@ -183,8 +178,8 @@ class QuizMakerClass:
         else:
             
             MainModules.invalidInputModule()
-            return quizMakerObject.quizMakerMainMenuModule(accountType, credentials) 
+            return QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials) 
 
-quizMakerObject = QuizMakerClass()
-accountType, credentials = quizMakerObject.SignInAndLogInProcess()
-quizMakerObject.quizMakerMainMenuModule(accountType, credentials)
+QuizMakerObject = QuizMakerClass()
+accountType, credentials = QuizMakerObject.SignInAndLogInProcess()
+QuizMakerObject.QuizMakerMainMenuModule(accountType, credentials)

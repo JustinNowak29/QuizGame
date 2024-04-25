@@ -2,15 +2,15 @@ ____________________________________
  AllProgramFunctions
  *------======------======------*
 
- - Answering Quizzes                                    ( )
+ - Answering Quizzes                                    (✓)
  - Updating Quizzes                                     ( )
  - Deleting Quizzes                                     (✓)
- - Testing Quizzes                                      ( )
+ - Testing Quizzes                                      (X)
  - Making Quizzes                                       (✓)
  - Managing Accounts                                    ( )
  - Managing Passwords                                   ( )
  - Account SignUp and LogIn                             (✓)
- - Viewing Stats                                        ( )
+ - Viewing Stats                                        (✓)
  - Progressing through the Difficulties of the Quizzes  (?)
 
 ____________________________________
@@ -18,8 +18,8 @@ ____________________________________
  *------======------======------*
 
  - Account SignUp and LogIn                             (✓)
- - Answering Quizzes                                    ( )
- - Viewing Stats                                        ( )
+ - Answering Quizzes                                    (✓)
+ - Viewing Stats                                        (✓)
  - Progressing through the Difficulties of the Quizzes  (?)
 
 ____________________________________
@@ -27,8 +27,8 @@ ____________________________________
  *------======------======------*
 
  - Account SignUp and LogIn                             (✓)
- - Viewing Stats                                        ( )
- - Testing Quizzes                                      ( )
+ - Viewing Stats                                        (✓)
+ - Testing Quizzes                                      (X)
  - Updating Quizzes                                     ( )
  - Deleting Quizzes                                     (✓)
  - Making Quizzes                                       (✓)
@@ -40,7 +40,7 @@ ____________________________________
  *------======------======------*
 
  - Account SignUp and LogIn                             (✓)
- - Viewing Stats                                        ( )
+ - Viewing Stats                                        (✓)
  - Managing Accounts                                    ( )
  - Managing Passwords                                   ( )
 
